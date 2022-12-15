@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_ÎÓÈ_1" data-name="—ÎÓÈ_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2374.53 1556">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        fill: #f2f2f2;
+        opacity: .17;
+      }
+    </style>
+  </defs>
+  <rect width="2374.53" height="1556"/>
+  <circle class="cls-2" cx="1187.26" cy="778" r="373"/>
+  <path class="cls-1" d="m1323.52,751.57l-200.61-115.82c-20.35-11.75-45.78,2.94-45.78,26.43v231.64c0,23.49,25.43,38.18,45.78,26.43l200.61-115.82c20.35-11.75,20.35-41.11,0-52.86Z"/>
+</svg>

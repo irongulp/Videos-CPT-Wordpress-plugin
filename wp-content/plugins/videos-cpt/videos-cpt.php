@@ -38,13 +38,6 @@ You should have received a copy of the GNU General Public License
 along with Videos CPT. If not, see https://www.gnu.org/licenses/gpl-2.0.txt.
 */
 
-// If this file is called directly, abort.
-
-
-if ( ! defined( 'WPINC' ) ) {
-	die;
-}
-
 function videos_cpt_get_class(): VideosCptPlugin {
 	require_once plugin_dir_path( __FILE__ ). 'Classes/VideosCptPlugin.php';
 	return new VideosCptPlugin();
@@ -62,6 +55,23 @@ function videos_cpt_deactivate(): void {
 	$plugin->deactivate();
 }
 
+function videos_cpt_shortcode_init(): void {
+	$plugin = videos_cpt_get_class();
+	$plugin->addShortcode();
+}
+
+function videos_cpt_get_shortcode(
+	$atts = array(),
+	$content = null,
+	$tag = ''
+): string {
+	$plugin = videos_cpt_get_class();
+	return $plugin->getShortcode(
+		$atts,
+		$tag
+	);
+}
+
 /** Register activate and deactivate functions */
 
 register_activation_hook(
@@ -73,3 +83,6 @@ register_deactivation_hook(
 	__FILE__,
 	'videos_cpt_deactivate'
 );
+
+add_action( 'init', 'videos_cpt_shortcode_init' );
+
