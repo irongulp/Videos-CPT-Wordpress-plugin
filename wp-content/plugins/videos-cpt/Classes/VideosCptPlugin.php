@@ -10,10 +10,12 @@ use function remove_menu_page;
 use function unregister_post_type;
 
 class VideosCptPlugin {
+	private const CPT_NAME = 'videos_cpt';
 	private const VIDEO_IMAGE_PATH = '/wp-content/plugins/videos-cpt/svg/video.svg';
 	private const DEFAULT_BORDER_COLOR = '#3498db';
 	private const DEFAULT_BORDER_WIDTH = '8px';
 	private const DEFAULT_CSS_BORDER_WIDTH_UNIT = 'px';
+	private const CPT_TEMPLATE = 'single-' . self::CPT_NAME . '.php';
 
 	public function __construct() {
 		return $this;
@@ -34,7 +36,7 @@ class VideosCptPlugin {
 	}
 
 	public function registerCustomPostType(): void {
-		register_post_type('videos_cpt',
+		register_post_type(self::CPT_NAME,
 			[
 				'labels'      => [
 					'name'          => __('Videos', 'textdomain'),
@@ -45,7 +47,9 @@ class VideosCptPlugin {
 				'show_in_menu'      => true,
 				'show_ui'           => true,
 				'menu_position'     => 20, // Below Pages
-				'menu_icon'         => 'dashicons-video-alt'
+				'menu_icon'         => 'dashicons-video-alt',
+				'capability_type'       => 'post',
+				'supports'              => array( 'title', 'editor', 'thumbnail', 'custom-fields' ),
 			]
 		);
 	}
@@ -53,7 +57,7 @@ class VideosCptPlugin {
 	public function addShortcode(): void {
 		add_shortcode(
 			'prefix_video',
-			'videos_cpt_get_shortcode'
+			self::CPT_NAME . '_get_shortcode'
 		);
 	}
 
@@ -85,7 +89,7 @@ class VideosCptPlugin {
 				$borderWidth .= self::DEFAULT_CSS_BORDER_WIDTH_UNIT;
 			}
 			$output = $this->getBlock(
-				$attributes['border_width'],
+				$borderWidth,
 				$attributes['border_color']
 			);
 		}
@@ -124,7 +128,100 @@ class VideosCptPlugin {
 	public function hideMenuItemFromAuthors(): void {
 		$user = wp_get_current_user();
 		if ( in_array( 'author', $user->roles ) ) {
-			remove_menu_page( 'edit.php?post_type=videos_cpt' );
+			remove_menu_page( 'edit.php?post_type=' . self::CPT_NAME );
 		}
+	}
+
+	public function addMetaBox(string $function): void {
+		add_meta_box(
+			self::CPT_NAME . '-meta-box',
+			'Video details',
+			$function,
+			self::CPT_NAME,
+			'normal',
+			'high'
+		);
+	}
+
+	public function showMetaBox(): void {
+		global $post;
+		echo '<input type="hidden" name="' . self::CPT_NAME . '_meta_box_nonce" value="', wp_create_nonce(basename(__FILE__)), '" />';
+
+		echo '<table class="form-table">';
+
+		foreach ($this->getMetaBoxFields() as $field) {
+			// get current post meta data
+			$meta = get_post_meta($post->ID, $field['id'], true);
+
+			echo '<tr>',
+			'<th style="width:20%"><label for="', $field['id'], '">', $field['name'], '</label></th>',
+			'<td>';
+			switch ($field['type']) {
+				case 'text':
+					echo '<input type="text" name="', $field['id'], '" id="', $field['id'], '" value="', $meta ?: $field['std'], '" size="30" style="width:97%" />', '<br />', $field['desc'];
+					break;
+				case 'textarea':
+					echo '<textarea name="', $field['id'], '" id="', $field['id'], '" cols="60" rows="4" style="width:97%">', $meta ?: $field['std'], '</textarea>', '<br />', $field['desc'];
+					break;
+				case 'select':
+					echo '<select name="', $field['id'], '" id="', $field['id'], '">';
+					foreach ($field['options'] as $option) {
+						echo '<option ', $meta == $option ? ' selected="selected"' : '', '>', $option, '</option>';
+					}
+					echo '</select>';
+					break;
+				case 'radio':
+					foreach ($field['options'] as $option) {
+						echo '<input type="radio" name="', $field['id'], '" value="', $option['value'], '"', $meta == $option['value'] ? ' checked="checked"' : '', ' />', $option['name'];
+					}
+					break;
+				case 'checkbox':
+					echo '<input type="checkbox" name="', $field['id'], '" id="', $field['id'], '"', $meta ? ' checked="checked"' : '', ' />';
+					break;
+			}
+			echo     '</td><td>',
+			'</td></tr>';
+		}
+
+		echo '</table>';
+	}
+
+	private function getMetaBoxFields(): array {
+		return [
+			[
+				'name' => 'Text box',
+				'desc' => 'Enter something here',
+				'id' => self::CPT_NAME . 'text',
+				'type' => 'text',
+				'std' => 'Default value 1'
+			],
+			[
+				'name' => 'Textarea',
+				'desc' => 'Enter big text here',
+				'id' => self::CPT_NAME . 'textarea',
+				'type' => 'textarea',
+				'std' => 'Default value 2'
+			],
+			[
+				'name' => 'Select box',
+				'id' => self::CPT_NAME . 'select',
+				'type' => 'select',
+				'options' => array('Option 1', 'Option 2', 'Option 3')
+			],
+			[
+				'name' => 'Radio',
+				'id' => self::CPT_NAME . 'radio',
+				'type' => 'radio',
+				'options' => array(
+					array('name' => 'Name 1', 'value' => 'Value 1'),
+					array('name' => 'Name 2', 'value' => 'Value 2')
+				)
+			],
+			[
+				'name' => 'Checkbox',
+				'id' => self::CPT_NAME . 'checkbox',
+				'type' => 'checkbox'
+			]
+		];
 	}
 }
