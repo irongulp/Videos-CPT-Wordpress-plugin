@@ -99,6 +99,7 @@ class VideosCptPlugin {
 		string $borderWidth,
 		string $borderColor
 	): string {
+		wp_enqueue_style('wp-block-columns-inline-css', '/wp-includes/css/dist/block-library/style.min.css');
 		$output = '<div class="is-layout-flex wp-container-10 wp-block-columns" ';
 		$output .= 'style="border-width:' . $borderWidth . '; border-color:' . $borderColor . ';">';
 		$output .= '<div class="is-layout-flow wp-block-column" style="flex-basis:33.33%; display: flex; flex-direction: column; justify-content: center;">';
