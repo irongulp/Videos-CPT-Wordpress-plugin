@@ -13,6 +13,7 @@ class VideosCptPlugin {
 	private const VIDEO_IMAGE_PATH = '/wp-content/plugins/videos-cpt/svg/video.svg';
 	private const DEFAULT_BORDER_COLOR = '#3498db';
 	private const DEFAULT_BORDER_WIDTH = '8px';
+	private const DEFAULT_CSS_BORDER_WIDTH_UNIT = 'px';
 
 	public function __construct() {
 		return $this;
@@ -79,6 +80,10 @@ class VideosCptPlugin {
 
 		if (is_numeric($attributes['id'])) {
 			$isInvalid = false;
+			$borderWidth = $attributes['border_width'];
+			if (is_numeric($borderWidth)) {
+				$borderWidth .= self::DEFAULT_CSS_BORDER_WIDTH_UNIT;
+			}
 			$output = $this->getBlock(
 				$attributes['border_width'],
 				$attributes['border_color']
