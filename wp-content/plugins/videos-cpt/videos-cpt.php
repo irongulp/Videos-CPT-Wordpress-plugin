@@ -1,6 +1,6 @@
 <?php
 
-use Classes\VideosCptPlugin;
+use Classes\Plugin;
 
 /**
  * Videos CPT
@@ -38,93 +38,5 @@ You should have received a copy of the GNU General Public License
 along with Videos CPT. If not, see https://www.gnu.org/licenses/gpl-2.0.txt.
 */
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
-/** Functions */
-
-function videos_cpt_get_class(): VideosCptPlugin {
-	require_once plugin_dir_path( __FILE__ ). 'Classes/VideosCptPlugin.php';
-	return new VideosCptPlugin();
-}
-
-/** Activate the plugin */
-function videos_cpt_activate(): void {
-	$plugin = videos_cpt_get_class();
-	$plugin->activate();
-}
-
-/** Deactivate the plugin */
-function videos_cpt_deactivate(): void {
-	$plugin = videos_cpt_get_class();
-	$plugin->deactivate();
-}
-
-/* Register the Videos CPT */
-function videos_cpt_custom_post_type_init(): void {
-	$plugin = videos_cpt_get_class();
-	$plugin->registerCustomPostType();
-}
-
-/** Add shortcode */
-function videos_cpt_shortcode_init(): void {
-	$plugin = videos_cpt_get_class();
-	$plugin->addShortcode();
-}
-
-/** Get shortcode output */
-function videos_cpt_get_shortcode(
-	$attributes = array(),
-	$content = null,
-	$tag = ''
-): string {
-	$plugin = videos_cpt_get_class();
-	return $plugin->getShortcode(
-		$attributes,
-		$tag
-	);
-}
-
-/** Hide from authors */
-function videos_cpt_remove_menu_items(): void {
-	$plugin = videos_cpt_get_class();
-	$plugin->hideMenuItemFromAuthors();
-}
-
-/** Add meta box */
-function videos_cpt_add_meta_box( ): void {
-	$plugin = videos_cpt_get_class();
-	$plugin->addMetaBox('videos_cpt_show_meta_box');
-}
-
-/** Show meta box */
-function videos_cpt_show_meta_box(): void {
-	$plugin = videos_cpt_get_class();
-	$plugin->showMetaBox();
-}
-
-/** Register activate and deactivate functions */
-register_activation_hook(
-	__FILE__,
-	'videos_cpt_activate'
-);
-register_deactivation_hook(
-	__FILE__,
-	'videos_cpt_deactivate'
-);
-
-/** Hooks */
-
-/** Add shortcode */
-add_action( 'init', 'videos_cpt_shortcode_init' );
-
-/** Register Videos CPT */
-add_action( 'init', 'videos_cpt_custom_post_type_init' );
-
-/** Hide from Authors */
-add_action( 'admin_menu', 'videos_cpt_remove_menu_items' );
-
-/** Add meta box */
-add_action( 'add_meta_boxes', 'videos_cpt_add_meta_box' );
+require_once plugin_dir_path( __FILE__ ). 'Classes/Plugin.php';
+(new Plugin())->addHooks(__FILE__);

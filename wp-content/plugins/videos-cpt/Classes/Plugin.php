@@ -2,14 +2,17 @@
 
 namespace Classes;
 
+use function add_action;
 use function add_shortcode;
 use function flush_rewrite_rules;
 use function is_numeric;
 
+use function register_activation_hook;
+use function register_deactivation_hook;
 use function remove_menu_page;
 use function unregister_post_type;
 
-class VideosCptPlugin {
+class Plugin {
 	private const CPT_NAME = 'videos_cpt';
 	private const VIDEO_IMAGE_PATH = '/wp-content/plugins/videos-cpt/svg/video.svg';
 	private const DEFAULT_BORDER_COLOR = '#3498db';
@@ -57,13 +60,14 @@ class VideosCptPlugin {
 	public function addShortcode(): void {
 		add_shortcode(
 			'prefix_video',
-			self::CPT_NAME . '_get_shortcode'
+			[$this, 'getShortcode']
 		);
 	}
 
 	public function getShortcode(
-		array $attributes,
-		string $tag
+		$attributes = array(),
+		$content = null,
+		$tag = ''
 	): string {
 		// normalize attribute keys, lowercase
 		$attributes = array_change_key_case($attributes);
@@ -132,11 +136,11 @@ class VideosCptPlugin {
 		}
 	}
 
-	public function addMetaBox(string $function): void {
+	public function addMetaBox(): void {
 		add_meta_box(
 			self::CPT_NAME . '-meta-box',
 			'Video details',
-			$function,
+			[$this, 'showMetaBox'],
 			self::CPT_NAME,
 			'normal',
 			'high'
@@ -223,5 +227,21 @@ class VideosCptPlugin {
 				'type' => 'checkbox'
 			]
 		];
+	}
+
+	public function addHooks(string $file): void {
+		register_activation_hook(
+			$file,
+			[$this, 'activate']
+		);
+		register_deactivation_hook(
+			$file,
+			[$this, 'deactivate']
+		);
+
+		add_action('init', [$this, 'registerCustomPostType']);
+		add_action('init', [$this, 'addShortcode']);
+		add_action('add_meta_boxes', [$this, 'addMetaBox']);
+		add_action('admin_menu', [$this, 'hideMenuItemFromAuthors']);
 	}
 }
