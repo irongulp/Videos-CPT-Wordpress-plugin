@@ -5,7 +5,8 @@ namespace Classes;
 use function add_shortcode;
 use function flush_rewrite_rules;
 use function is_numeric;
-use function is_plugin_active;
+
+use function remove_menu_page;
 use function unregister_post_type;
 
 class VideosCptPlugin {
@@ -19,7 +20,7 @@ class VideosCptPlugin {
 
 	public function activate(): void {
 		// Register the Videos CPT
-		$this->registerCpt();
+		$this->registerCustomPostType();
 		// Clear the permalinks after the post type has been registered.
 		flush_rewrite_rules();
 	}
@@ -31,27 +32,28 @@ class VideosCptPlugin {
 		flush_rewrite_rules();
 	}
 
-	private function registerCpt(): void {
+	public function registerCustomPostType(): void {
 		register_post_type('videos_cpt',
-			array(
-				'labels'      => array(
+			[
+				'labels'      => [
 					'name'          => __('Videos', 'textdomain'),
 					'singular_name' => __('Video', 'textdomain'),
-				),
-				'public'      => true,
-				'has_archive' => true,
-				'show_in_menu' => 'edit.php'
-			)
+				],
+				'public'            => true,
+				'has_archive'       => false,
+				'show_in_menu'      => true,
+				'show_ui'           => true,
+				'menu_position'     => 20, // Below Pages
+				'menu_icon'         => 'dashicons-video-alt'
+			]
 		);
 	}
 
 	public function addShortcode(): void {
-		if ($this->pluginIsActive()){
-			add_shortcode(
-				'prefix_video',
-				'videos_cpt_get_shortcode'
-			);
-		}
+		add_shortcode(
+			'prefix_video',
+			'videos_cpt_get_shortcode'
+		);
 	}
 
 	public function getShortcode(
@@ -90,11 +92,6 @@ class VideosCptPlugin {
 		return $output;
 	}
 
-	private function pluginIsActive(): bool {
-		include_once ABSPATH . 'wp-admin/includes/plugin.php';
-		return is_plugin_active('videos-cpt/videos-cpt.php');
-	}
-
 	private function getBlock(
 		string $borderWidth,
 		string $borderColor
@@ -117,5 +114,12 @@ class VideosCptPlugin {
 		$output .= '</div>';
 
 		return $output;
+	}
+
+	public function hideMenuItemFromAuthors(): void {
+		$user = wp_get_current_user();
+		if ( in_array( 'author', $user->roles ) ) {
+			remove_menu_page( 'edit.php?post_type=videos_cpt' );
+		}
 	}
 }

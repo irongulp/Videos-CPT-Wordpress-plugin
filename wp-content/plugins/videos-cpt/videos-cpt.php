@@ -55,11 +55,19 @@ function videos_cpt_deactivate(): void {
 	$plugin->deactivate();
 }
 
+/* Register the Videos CPT */
+function videos_cpt_custom_post_type_init(): void {
+	$plugin = videos_cpt_get_class();
+	$plugin->registerCustomPostType();
+}
+
+/** Add shortcode */
 function videos_cpt_shortcode_init(): void {
 	$plugin = videos_cpt_get_class();
 	$plugin->addShortcode();
 }
 
+/** Get shortcode output */
 function videos_cpt_get_shortcode(
 	$atts = array(),
 	$content = null,
@@ -72,17 +80,26 @@ function videos_cpt_get_shortcode(
 	);
 }
 
-/** Register activate and deactivate functions */
+function videos_cpt_remove_menu_items(): void {
+	$plugin = videos_cpt_get_class();
+	$plugin->hideMenuItemFromAuthors();
+}
 
+/** Register activate and deactivate functions */
 register_activation_hook(
 	__FILE__,
 	'videos_cpt_activate'
 );
-
 register_deactivation_hook(
 	__FILE__,
 	'videos_cpt_deactivate'
 );
 
+/** Add shortcode */
 add_action( 'init', 'videos_cpt_shortcode_init' );
 
+/** Register Videos CPT */
+add_action( 'init', 'videos_cpt_custom_post_type_init' );
+
+/** Hide from Authors */
+add_action( 'admin_menu', 'videos_cpt_remove_menu_items' );
