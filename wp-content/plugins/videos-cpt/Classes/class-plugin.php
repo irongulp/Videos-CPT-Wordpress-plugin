@@ -2,11 +2,12 @@
 
 namespace Classes;
 
-use WP_Post;
 use function __;
 use function add_action;
+use function add_filter;
 use function add_shortcode;
 use function array_intersect;
+use function basename;
 use function defined;
 use function flush_rewrite_rules;
 use function get_post_meta;
@@ -21,7 +22,7 @@ use function unregister_post_type;
 use function wp_enqueue_style;
 use function wp_get_current_user;
 use function wp_register_style;
-use const PHP_EOL;
+use function wp_verify_nonce;
 
 class Plugin {
 	private const CPT_NAME = 'videos_cpt';
@@ -60,8 +61,8 @@ class Plugin {
 		add_action( 'add_meta_boxes', [$this, 'setMetaBoxes'] );
 		add_action( 'save_post', [$this, 'savePost'] );
 		add_filter( 'use_block_editor_for_post', '__return_false');
-		add_filter( 'mce_external_plugins', [ $this, 'add_tinymce_plugin' ] );
 		add_filter( 'mce_buttons', [ $this, 'add_tinymce_toolbar_button' ] );
+		add_filter( 'mce_external_plugins', [ $this, 'add_tinymce_plugin' ] );
 		add_action( 'admin_enqueue_scripts', [$this, 'add_modal_styling'] );
 		add_action( 'edit_form_after_editor', [$this, 'add_modal'] );
 	}
@@ -316,12 +317,17 @@ class Plugin {
 	}
 
 	public function savePost( int $postId ): int {
-		// Skip if autosave
-		if ( $this->isAutosave() ) {
-			return $postId;
-		}
-
 		if ( $this->isCpt() ) {
+			// Verify nonce
+			if ( !wp_verify_nonce( $_POST[self::CPT_NAME . '_meta_box_nonce'] ?? '', basename(__FILE__ ) ) ) {
+				return $postId;
+			}
+
+			// Skip if autosave
+			if ( $this->isAutosave() ) {
+				return $postId;
+			}
+
 			foreach ( $this->getMetaBoxFields() as $field ) {
 				$id = $field['id'];
 				$old = get_post_meta( $postId, $id, true );
@@ -356,7 +362,7 @@ class Plugin {
 		return $buttons;
 	}
 
-	public function add_modal(WP_Post $post): void {
+	public function add_modal(): void {
 		$modal = '<div id="video-shortcode-modal" class="video-shortcode-modal">';
 		$modal .= '<div class="video-shortcode-modal-content">';
         $modal .= '<h3>Video shortcode</h3>';

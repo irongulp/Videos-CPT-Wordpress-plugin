@@ -19,7 +19,6 @@
             // Open the modal
             modal.style.display = "block";
 
-
             // When the user clicks on Cancel, close the modal
             cancel.onclick = function() {
                 modal.style.display = "none";
@@ -35,7 +34,11 @@
             // When the user clicks on Insert, insert shortcode
             insert.onclick = function() {
                 const postId = document.getElementById("video-cpt-post-id").value;
-                const borderWidth = document.getElementById("video-cpt-border-width").value;
+                let borderWidth = document.getElementById("video-cpt-border-width").value;
+                // Add units if only a number is entered
+                if (!isNaN(borderWidth)) {
+                    borderWidth = borderWidth + 'px';
+                }
                 const borderColor = document.getElementById("video-cpt-border-color").value;
                 const shortCode =
                     '[prefix_video ' +
