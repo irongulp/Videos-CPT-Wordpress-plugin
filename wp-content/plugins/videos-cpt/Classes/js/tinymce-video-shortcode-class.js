@@ -19,6 +19,7 @@
             // Open the modal
             modal.style.display = "block";
 
+
             // When the user clicks on Cancel, close the modal
             cancel.onclick = function() {
                 modal.style.display = "none";
@@ -35,7 +36,13 @@
             insert.onclick = function() {
                 const postId = document.getElementById("video-cpt-post-id").value;
                 const borderWidth = document.getElementById("video-cpt-border-width").value;
-                const shortCode = '[prefix_video id="' + postId + '" border_width="' + borderWidth + '"]';
+                const borderColor = document.getElementById("video-cpt-border-color").value;
+                const shortCode =
+                    '[prefix_video ' +
+                    'id="' + postId + '" ' +
+                    'border_width="' + borderWidth + '" ' +
+                    'border_color="' + borderColor + '" ' +
+                    ']';
                 modal.style.display = "none";
                 editor.execCommand('mceInsertContent', false, shortCode);
             }
