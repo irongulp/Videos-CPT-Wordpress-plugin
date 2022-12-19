@@ -38,5 +38,5 @@ You should have received a copy of the GNU General Public License
 along with Videos CPT. If not, see https://www.gnu.org/licenses/gpl-2.0.txt.
 */
 
-require_once plugin_dir_path( __FILE__ ). 'Classes/Plugin.php';
+require_once plugin_dir_path( __FILE__ ). 'Classes/class-plugin.php';
 (new Plugin())->addHooks(__FILE__);
