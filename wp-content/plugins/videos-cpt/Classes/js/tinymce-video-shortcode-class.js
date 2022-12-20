@@ -9,6 +9,7 @@
 
         // Button clicked
         editor.addCommand('video_shortcode_class', function() {
+
             // Get the modal
             const modal = document.getElementById("video-shortcode-modal");
 
@@ -22,12 +23,14 @@
             // When the user clicks on Cancel, close the modal
             cancel.onclick = function() {
                 modal.style.display = "none";
+                editor.focus();
             }
 
             // When the user clicks anywhere outside the modal, close it
             window.onclick = function(event) {
                 if (event.target === modal) {
                     modal.style.display = "none";
+                    editor.focus();
                 }
             }
 
