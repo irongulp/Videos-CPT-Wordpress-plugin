@@ -12,7 +12,7 @@ use function wp_enqueue_style;
 
 class Shortcode implements Constants {
 
-	private const VIDEO_THUMBNAIL_IMAGE_PATH = '/wp-content/plugins/videos-cpt/svg/video.svg';
+	private const VIDEO_THUMBNAIL_IMAGE_PATH = WP_PLUGIN_URL . '/videos-cpt/svg/video.svg';
 	private const SHORTCODE_TAG = 'prefix_video';
 	private const DEFAULT_BORDER_COLOR = '#3498db';
 	private const DEFAULT_BORDER_WIDTH = '8px';

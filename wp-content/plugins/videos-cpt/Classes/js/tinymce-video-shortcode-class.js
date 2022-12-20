@@ -4,7 +4,7 @@
         editor.addButton('custom_link_class', {
             title: 'Insert Video',
             cmd: 'video_shortcode_class',
-            image: '/wp-content/plugins/videos-cpt/svg/movie-camera-svgrepo-com.svg',
+            image: '../wp-content/plugins/videos-cpt/svg/movie-camera-svgrepo-com.svg',
         });
 
         // Button clicked
