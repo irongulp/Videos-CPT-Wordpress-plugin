@@ -1,7 +1,5 @@
 <?php
 
-use Classes\Plugin;
-
 /**
  * Videos CPT
  *
@@ -38,5 +36,37 @@ You should have received a copy of the GNU General Public License
 along with Videos CPT. If not, see https://www.gnu.org/licenses/gpl-2.0.txt.
 */
 
-require_once plugin_dir_path( __FILE__ ). 'Classes/class-plugin.php';
-(new Plugin())->addHooks(__FILE__);
+use Classes\CustomPostType;
+use Classes\Form;
+use Classes\MetaBox;
+use Classes\Modal;
+use Classes\Plugin;
+use Classes\Router;
+use Classes\Shortcode;
+use Classes\TinyMce;
+use Classes\User;
+
+require_once plugin_dir_path( __FILE__ ). 'load-classes.php';
+
+// Create classes and inject dependencies
+$form = new Form();
+$meta_box = new MetaBox($form);
+$shortcode = new Shortcode();
+$tiny_mce = new TinyMce();
+$modal = new Modal();
+$user = new User();
+$custom_post_type = new CustomPostType($meta_box);
+$plugin = new Plugin(
+	$custom_post_type,
+	$user
+);
+$router = new Router(
+	$plugin,
+	$custom_post_type,
+	$meta_box,
+	$shortcode,
+	$tiny_mce,
+	$modal
+);
+
+$router->addHooks(__FILE__);
