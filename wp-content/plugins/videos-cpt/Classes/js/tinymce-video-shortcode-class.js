@@ -48,6 +48,7 @@
                     ']';
                 modal.style.display = "none";
                 editor.execCommand('mceInsertContent', false, shortCode);
+                editor.execCommand('InsertLineBreak', false, null);
             }
         });
     });
