@@ -383,8 +383,8 @@ class Plugin {
    		$modal .= '<input type="color" id="video-cpt-border-color" value="#3498db">';
 		$modal .= '</td></tr>';
 		$modal .= '</table>';
-		$modal .= '<div><button class="button" id="video-cpt-insert">Insert</button>&nbsp;';
-		$modal .= '<button class="button" id="video-cpt-close">Cancel</button></div>';
+		$modal .= '<div><span class="button" id="video-cpt-insert">Insert</span>&nbsp;';
+		$modal .= '<span class="button" id="video-cpt-close">Cancel</span></div>';
 	  	$modal .= '</div>';
         $modal .= '</div>';
 
