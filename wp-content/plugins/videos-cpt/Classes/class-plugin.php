@@ -365,26 +365,26 @@ class Plugin {
 	public function add_modal(): void {
 		$modal = '<div id="video-shortcode-modal" class="video-shortcode-modal">';
 		$modal .= '<div class="video-shortcode-modal-content">';
-        $modal .= '<h3>Video shortcode</h3>';
+        $modal .= '<h3>' . __('Video shortcode', 'textdomain') . '</h3>';
 		$modal .= '<table class="form-table">';
 		$modal .= '<tr>';
-		$modal .= '<th style="width:50%"><label for="video-cpt-post-id">Post ID</label></th>';
+		$modal .= '<th style="width:50%"><label for="video-cpt-post-id">'. __('Post ID', 'textdomain') . '</label></th>';
 		$modal .= '<td>';
 		$modal .= '<input type="text" name="post-id" id="video-cpt-post-id" value="" size="30" style="width:97%" />';
 		$modal .= '</td></tr>';
 		$modal .= '<tr>';
-		$modal .= '<th style="width:50%"><label for="video-cpt-border-width">Border width</label></th>';
+		$modal .= '<th style="width:50%"><label for="video-cpt-border-width">' . __('Border width', 'textdomain') . '</label></th>';
 		$modal .= '<td>';
 		$modal .= '<input type="text" name="border-width" id="video-cpt-border-width" value="" size="30" style="width:97%" />';
 		$modal .= '</td></tr>';
 		$modal .= '<tr>';
-		$modal .= '<th style="width:50%"><label for="video-cpt-border-color">Border colour</label></th>';
+		$modal .= '<th style="width:50%"><label for="video-cpt-border-color">' . __('Border colour', 'textdomain') . '</label></th>';
 		$modal .= '<td>';
    		$modal .= '<input type="color" id="video-cpt-border-color" value="#3498db">';
 		$modal .= '</td></tr>';
 		$modal .= '</table>';
-		$modal .= '<div><span class="button" id="video-cpt-insert">Insert</span>&nbsp;';
-		$modal .= '<span class="button" id="video-cpt-close">Cancel</span></div>';
+		$modal .= '<div><span class="button" id="video-cpt-insert">' . __('Insert', 'textdomain') .'</span>&nbsp;';
+		$modal .= '<span class="button" id="video-cpt-close">' . __('Cancel', 'textdomain') . '</span></div>';
 	  	$modal .= '</div>';
         $modal .= '</div>';
 
