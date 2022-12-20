@@ -47,7 +47,7 @@
                     '[prefix_video ' +
                     'id="' + postId + '" ' +
                     'border_width="' + borderWidth + '" ' +
-                    'border_color="' + borderColor + '" ' +
+                    'border_color="' + borderColor + '"' +
                     ']';
                 modal.style.display = "none";
                 editor.execCommand('mceInsertContent', false, shortCode);
